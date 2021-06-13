@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,5 +20,9 @@ public class Campanha {
 
     @Enumerated(EnumType.ORDINAL)
     private Status status;
+    @ManyToOne
+    private Usuario dono;
+    @OneToMany
+    private List<Doacao> doacoes;
 
 }

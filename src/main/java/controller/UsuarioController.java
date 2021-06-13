@@ -32,7 +32,7 @@ public class UsuarioController {
 
 	}
 	
-	@GetMapping("/")
+/*	@GetMapping("/")
 	private ResponseEntity<String> verificarSaude() {
 		return new ResponseEntity<>("Server is running!", HttpStatus.OK);
 	}
@@ -40,7 +40,7 @@ public class UsuarioController {
 	@PostMapping("/login")
 	public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
 		return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
-	}
+	}*/
 
 	@PostMapping()
 	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){
