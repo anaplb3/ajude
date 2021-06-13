@@ -7,10 +7,7 @@ import model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.client.HttpClientErrorException;
 import service.JwtService;
@@ -19,6 +16,7 @@ import service.UsuarioService;
 import javax.servlet.ServletException;
 
 @RestController
+@RequestMapping("/v1/api/usuarios")
 public class UsuarioController {
 
 	@Autowired
@@ -36,22 +34,22 @@ public class UsuarioController {
 	
 	@GetMapping("/")
 	private ResponseEntity<String> verificarSaude() {
-		return new ResponseEntity<String>("Server is running!", HttpStatus.OK);
+		return new ResponseEntity<>("Server is running!", HttpStatus.OK);
 	}
 
 	@PostMapping("/login")
 	public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
-		return new ResponseEntity<RespostaLoginDTO>(jwtService.autenticacao(login), HttpStatus.OK);
+		return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
 	}
 
-	@PostMapping("/usuarios")
+	@PostMapping()
 	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){
 		try {
 			UsuarioDTO userCriado = this.uruarioService.criarUsuario(usuario);
-			return new ResponseEntity<UsuarioDTO>(userCriado, HttpStatus.OK);
+			return new ResponseEntity<>(userCriado, HttpStatus.OK);
 
 		} catch (HttpClientErrorException errorUsuario) {
-			return new ResponseEntity<UsuarioDTO>(errorUsuario.getStatusCode());
+			return new ResponseEntity<>(errorUsuario.getStatusCode());
 		}
 	}
 	
