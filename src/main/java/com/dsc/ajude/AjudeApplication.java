@@ -2,18 +2,22 @@ package com.dsc.ajude;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
-import com.dsc.ajude.filter.TokenFilter;
+import com.dsc.ajude.filtro.TokenFiltro;
 
 @SpringBootApplication
+@EnableConfigurationProperties
+@EntityScan(basePackages = {"com.dsc.ajude.modelos"})
 public class AjudeApplication {
 	
 	@Bean
-	public FilterRegistrationBean<TokenFilter> filterJwt() {
-		FilterRegistrationBean<TokenFilter> filterRB = new FilterRegistrationBean<TokenFilter>();
-		filterRB.setFilter(new TokenFilter());
+	public FilterRegistrationBean<TokenFiltro> filterJwt() {
+		FilterRegistrationBean<TokenFiltro> filterRB = new FilterRegistrationBean<TokenFiltro>();
+		filterRB.setFilter(new TokenFiltro());
 		filterRB.addUrlPatterns("/v1/api/auth/*");
 		return filterRB;
 	}

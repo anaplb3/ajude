@@ -1,7 +1,8 @@
-package com.dsc.ajude.model;
+package com.dsc.ajude.modelos;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 @Entity

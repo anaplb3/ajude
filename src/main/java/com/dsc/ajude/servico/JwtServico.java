@@ -1,4 +1,4 @@
-package com.dsc.ajude.service;
+package com.dsc.ajude.servico;
 
 import java.util.Date;
 
@@ -10,20 +10,20 @@ import com.dsc.ajude.dto.LoginDTO;
 import com.dsc.ajude.dto.RespostaLoginDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import com.dsc.ajude.filter.TokenFilter;
+import com.dsc.ajude.filtro.TokenFiltro;
 
 import javax.servlet.ServletException;
 
 @Service
-public class JwtService {
+public class JwtServico {
 
 	@Autowired
-	private UsuarioService usuarioService;
-	private final String TOKEN_KEY = "TOKEN_VAIDACERTO";
+	private UsuarioServico usuarioServico;
+	public static final String TOKEN_KEY = "TOKEN_VAIDACERTO";
 	
 	public RespostaLoginDTO autenticacao(LoginDTO login) {
 		
-		if(usuarioService.validarSenhaDoUsuario(login)) {
+		if(usuarioServico.validarSenhaDoUsuario(login)) {
 			return new RespostaLoginDTO("Usuário ou senha incorreto! Não foi possível realizar o login");
 		}
 		
@@ -43,7 +43,7 @@ public class JwtService {
 		}
 
 		// Extraindo apenas o token do cabecalho.
-		String token = authorizationHeader.substring(TokenFilter.TOKEN_INDEX);
+		String token = authorizationHeader.substring(TokenFiltro.TOKEN_INDEX);
 
 		String subject = null;
 		try {

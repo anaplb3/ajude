@@ -1,11 +1,8 @@
-package com.dsc.ajude.model;
+package com.dsc.ajude.modelos;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity

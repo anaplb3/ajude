@@ -1,7 +1,8 @@
-package com.dsc.ajude.model;
+package com.dsc.ajude.modelos;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class Campanha {
     private Long id;
     private String nome;
     private String descricao;
-    private Date deadline;
+    private LocalDate deadline;
     private double meta;
 
 

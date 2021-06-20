@@ -1,4 +1,4 @@
-package com.dsc.ajude.controller;
+package com.dsc.ajude.controladores;
 
 import com.dsc.ajude.dto.LoginDTO;
 import com.dsc.ajude.dto.RespostaLoginDTO;
@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.dsc.ajude.service.JwtService;
+import com.dsc.ajude.servico.JwtServico;
 
 import javax.servlet.ServletException;
 
 @RestController
-@RequestMapping("/v1/api")
-public class LoginController {
+@RequestMapping("/v1/api/login")
+public class LoginControlador {
     @Autowired
-    private JwtService jwtService;
+    private JwtServico jwtServico;
 
-    @PostMapping("/login")
+    @PostMapping("")
     public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
-        return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
+        return new ResponseEntity<>(jwtServico.autenticacao(login), HttpStatus.OK);
     }
 }

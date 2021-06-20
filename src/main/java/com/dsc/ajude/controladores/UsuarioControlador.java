@@ -1,34 +1,30 @@
-package com.dsc.ajude.controller;
+package com.dsc.ajude.controladores;
 
-import com.dsc.ajude.dto.LoginDTO;
-import com.dsc.ajude.dto.RespostaLoginDTO;
 import com.dsc.ajude.dto.UsuarioDTO;
-import com.dsc.ajude.model.Usuario;
+import com.dsc.ajude.modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.client.HttpClientErrorException;
-import com.dsc.ajude.service.JwtService;
-import com.dsc.ajude.service.UsuarioService;
-
-import javax.servlet.ServletException;
+import com.dsc.ajude.servico.JwtServico;
+import com.dsc.ajude.servico.UsuarioServico;
 
 @RestController
 @RequestMapping("/v1/api/usuarios")
-public class UsuarioController {
+public class UsuarioControlador {
 
 	@Autowired
-	private UsuarioService uruarioService;
+	private UsuarioServico usuarioServico;
 
 	@Autowired
-	private JwtService jwtService;
+	private JwtServico jwtServico;
 
-	public UsuarioController(UsuarioService usuarioService, JwtService jwtService){
+	public UsuarioControlador(UsuarioServico usuarioServico, JwtServico jwtServico){
 		super();
-		this.uruarioService = usuarioService;
-		this.jwtService = jwtService;
+		this.usuarioServico = usuarioServico;
+		this.jwtServico = jwtServico;
 
 	}
 	
@@ -45,7 +41,7 @@ public class UsuarioController {
 	@PostMapping("")
 	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){
 		try {
-			UsuarioDTO userCriado = this.uruarioService.criarUsuario(usuario);
+			UsuarioDTO userCriado = this.usuarioServico.criarUsuario(usuario);
 			return new ResponseEntity<>(userCriado, HttpStatus.OK);
 
 		} catch (HttpClientErrorException errorUsuario) {

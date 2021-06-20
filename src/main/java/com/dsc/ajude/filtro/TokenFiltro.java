@@ -1,5 +1,6 @@
-package com.dsc.ajude.filter;
+package com.dsc.ajude.filtro;
 
+import com.dsc.ajude.servico.JwtServico;
 import io.jsonwebtoken.*;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class TokenFilter extends GenericFilterBean {
+public class TokenFiltro extends GenericFilterBean {
 
     public final static int TOKEN_INDEX = 7;
 
@@ -30,7 +31,7 @@ public class TokenFilter extends GenericFilterBean {
         String token = header.substring(TOKEN_INDEX);
 
         try {
-        	Jwts.parser().setSigningKey("login vai da certo").parseClaimsJws(token).getBody();
+        	Jwts.parser().setSigningKey(JwtServico.TOKEN_KEY).parseClaimsJws(token).getBody();
         } catch(ExpiredJwtException | MalformedJwtException | PrematureJwtException | UnsupportedJwtException | IllegalArgumentException e){
 
             ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
