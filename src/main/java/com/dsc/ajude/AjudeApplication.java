@@ -4,7 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import token.TokenFilter;
+
+import com.dsc.ajude.filter.TokenFilter;
 
 @SpringBootApplication
 public class AjudeApplication {

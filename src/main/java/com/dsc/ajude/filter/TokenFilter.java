@@ -1,4 +1,4 @@
-package token;
+package com.dsc.ajude.filter;
 
 import io.jsonwebtoken.*;
 import org.springframework.web.filter.GenericFilterBean;

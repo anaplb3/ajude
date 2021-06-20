@@ -1,13 +1,13 @@
-package service;
+package com.dsc.ajude.service;
 
-import dto.LoginDTO;
-import dto.UsuarioDTO;
-import model.Usuario;
+import com.dsc.ajude.dto.LoginDTO;
+import com.dsc.ajude.dto.UsuarioDTO;
+import com.dsc.ajude.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import repository.UsuarioRepository;
+import com.dsc.ajude.repository.UsuarioRepository;
 
 import javax.servlet.ServletException;
 import java.util.Optional;
@@ -29,12 +29,12 @@ public class UsuarioService {
     public UsuarioDTO criarUsuario(Usuario usuario){
         if(this.usuarioRepository.findById(usuario.getEmail()).isEmpty()){
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+        } else {
+            this.usuarioRepository.save(usuario);
+            
+            return new UsuarioDTO(usuario.getEmail(), usuario.getPrimeiroNome(), usuario.getUltimoNome());
         }
 
-        this.usuarioRepository.save(usuario);
-        
-        return new UsuarioDTO(usuario.getEmail(), usuario.getPrimeiroNome(), usuario.getUltimoNome());
-        
     }
 
     public boolean validarSenhaDoUsuario(LoginDTO login) {

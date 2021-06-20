@@ -1,4 +1,4 @@
-package model;
+package com.dsc.ajude.model;
 
 public enum Status {
     ATIVA(1),

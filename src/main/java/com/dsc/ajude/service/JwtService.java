@@ -1,4 +1,4 @@
-package service;
+package com.dsc.ajude.service;
 
 import java.util.Date;
 
@@ -6,11 +6,11 @@ import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dto.LoginDTO;
-import dto.RespostaLoginDTO;
+import com.dsc.ajude.dto.LoginDTO;
+import com.dsc.ajude.dto.RespostaLoginDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import token.TokenFilter;
+import com.dsc.ajude.filter.TokenFilter;
 
 import javax.servlet.ServletException;
 

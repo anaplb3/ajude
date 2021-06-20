@@ -1,4 +1,4 @@
-package dto;
+package com.dsc.ajude.dto;
 
 import lombok.Builder;
 
