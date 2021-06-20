@@ -1,17 +1,17 @@
-package controller;
+package com.dsc.ajude.controller;
 
-import dto.LoginDTO;
-import dto.RespostaLoginDTO;
-import dto.UsuarioDTO;
-import model.Usuario;
+import com.dsc.ajude.dto.LoginDTO;
+import com.dsc.ajude.dto.RespostaLoginDTO;
+import com.dsc.ajude.dto.UsuarioDTO;
+import com.dsc.ajude.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.client.HttpClientErrorException;
-import service.JwtService;
-import service.UsuarioService;
+import com.dsc.ajude.service.JwtService;
+import com.dsc.ajude.service.UsuarioService;
 
 import javax.servlet.ServletException;
 
@@ -42,7 +42,7 @@ public class UsuarioController {
 		return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
 	}
 
-	@PostMapping()
+	@PostMapping("")
 	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){
 		try {
 			UsuarioDTO userCriado = this.uruarioService.criarUsuario(usuario);

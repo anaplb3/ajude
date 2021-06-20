@@ -1,4 +1,4 @@
-package exceptions;
+package com.dsc.ajude.exceptions;
 
 public class DeadlineInvalidoException extends Exception {
 

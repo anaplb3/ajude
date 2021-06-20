@@ -1,13 +1,13 @@
-package service;
+package com.dsc.ajude.service;
 
-import exceptions.DeadlineInvalidoException;
-import exceptions.PermissaoNegada;
-import exceptions.RecursoNaoEncontradoException;
-import model.Campanha;
-import model.Status;
+import com.dsc.ajude.exceptions.DeadlineInvalidoException;
+import com.dsc.ajude.exceptions.PermissaoNegada;
+import com.dsc.ajude.exceptions.RecursoNaoEncontradoException;
+import com.dsc.ajude.model.Campanha;
+import com.dsc.ajude.model.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.CampanhaRepository;
+import com.dsc.ajude.repository.CampanhaRepository;
 
 import javax.servlet.ServletException;
 import java.util.Date;

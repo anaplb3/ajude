@@ -1,4 +1,4 @@
-package model;
+package com.dsc.ajude.model;
 
 import lombok.Data;
 

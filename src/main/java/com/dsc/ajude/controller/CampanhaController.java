@@ -1,16 +1,14 @@
-package controller;
+package com.dsc.ajude.controller;
 
-import exceptions.DeadlineInvalidoException;
-import exceptions.PermissaoNegada;
-import exceptions.RecursoNaoEncontradoException;
-import model.Campanha;
+import com.dsc.ajude.exceptions.DeadlineInvalidoException;
+import com.dsc.ajude.exceptions.PermissaoNegada;
+import com.dsc.ajude.exceptions.RecursoNaoEncontradoException;
+import com.dsc.ajude.model.Campanha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.CampanhaService;
-
-import javax.servlet.ServletException;
+import com.dsc.ajude.service.CampanhaService;
 
 @RestController
 @RequestMapping("/v1/api/auth/campanhas")

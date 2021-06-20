@@ -1,4 +1,4 @@
-package model;
+package com.dsc.ajude.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
