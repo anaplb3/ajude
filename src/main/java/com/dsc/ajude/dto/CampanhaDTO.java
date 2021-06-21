@@ -7,12 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-
 public class CampanhaDTO {
     private String nome;
     private String descricao;
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate deadline;
     private double meta;
     private String emailUsuario;

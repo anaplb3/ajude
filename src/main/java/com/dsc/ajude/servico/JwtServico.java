@@ -23,7 +23,7 @@ public class JwtServico {
 	
 	public RespostaLoginDTO autenticacao(LoginDTO login) {
 		
-		if(usuarioServico.validarSenhaDoUsuario(login)) {
+		if(!usuarioServico.validarSenhaDoUsuario(login)) {
 			return new RespostaLoginDTO("Usuário ou senha incorreto! Não foi possível realizar o login");
 		}
 		
