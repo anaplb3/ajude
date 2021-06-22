@@ -25,7 +25,7 @@ public class CampanhaDTO {
 
     public Campanha campanhaDTOParaCampanha(Usuario donoDaCampanha, Status status) {
         Campanha campanha = new Campanha();
-        campanha.setNome(this.nome);
+        campanha.setNome(this.nome.toLowerCase());
         campanha.setDescricao(this.descricao);
         campanha.setDeadline(this.deadline);
         campanha.setMeta(this.meta);

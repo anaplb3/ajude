@@ -1,14 +1,18 @@
 package com.dsc.ajude.controladores;
 
 import com.dsc.ajude.dto.CampanhaDTO;
+import com.dsc.ajude.dto.CampanhaSubstringDTO;
 import com.dsc.ajude.excecoes.DataInvalidaExcecao;
 import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import com.dsc.ajude.excecoes.RecursoNaoEncontradoExcecao;
+import com.dsc.ajude.modelos.Campanha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.dsc.ajude.servico.CampanhaServico;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/auth/campanhas")
@@ -49,6 +53,13 @@ public class CampanhaControlador {
         } catch (PermissaoNegadaExcecao e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping("/substring")
+    private ResponseEntity<?> getCampanhaPorSubstring(@RequestBody CampanhaSubstringDTO campanhaSubstringDTO) {
+        List<Campanha> campanhas = campanhaServico.getCampanhaPorSubstring(campanhaSubstringDTO);
+        HttpStatus httpStatus = campanhas == null || campanhas.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        return new ResponseEntity<>(campanhas, httpStatus);
     }
 
 }
