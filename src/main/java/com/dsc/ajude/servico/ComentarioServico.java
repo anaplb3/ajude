@@ -37,16 +37,15 @@ public class ComentarioServico {
 		}
 		
 		Comentario novoComentario = new Comentario();
-		novoComentario.setConteudoDaMensagem(corpoDaMensagem);
-		novoComentario.setUsuario(donoDoComentario);
+		novoComentario.setConteudoDaMensagem(comentarioAdicionado.getCorpoDaMensagem());
+		novoComentario.setUsuario(donoComentario);
 		
-		if(Objects.nonNull(comentarioAdicionado.getIdCampanha())) {
+		if(Objects.isNull(comentarioAdicionado.getIdCampanha())) {
 			Comentario comentarioParaComentario = comentarioRepositorio.findById(comentarioAdicionado.getIdComentario()).get(); 
 			comentarioParaComentario.setRespostasUsuarios(novoComentario);
 			comentarioRepositorio.save(comentarioParaComentario);
-			
 		} else if (Objects.nonNull(comentarioAdicionado.getIdComentario())) {
-			novoComentario.setCampanhaReferencia(campanha);
+			novoComentario.setCampanhaReferencia(campanha.get());
 	
 		}
 		
