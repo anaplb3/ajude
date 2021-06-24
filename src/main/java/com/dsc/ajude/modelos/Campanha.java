@@ -20,9 +20,14 @@ public class Campanha {
 
     @Enumerated(EnumType.ORDINAL)
     private Status status;
+    
     @ManyToOne
     private Usuario dono;
+   
     @OneToMany
     private List<Doacao> doacoes;
+    
+    @OneToMany
+    private List<Comentario> comentarios;
 
 }
