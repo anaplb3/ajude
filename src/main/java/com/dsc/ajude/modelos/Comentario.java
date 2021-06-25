@@ -27,8 +27,5 @@ public class Comentario {
     
     @ManyToOne
     private Campanha campanhaReferencia;
-    
-    
-    
-    
+
 }

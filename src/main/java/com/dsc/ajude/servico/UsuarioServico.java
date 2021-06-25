@@ -11,6 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.dsc.ajude.repositorios.UsuarioRepositorio;
 
 import javax.servlet.ServletException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,12 +43,23 @@ public class UsuarioServico {
         return optionalUsuario.isPresent() && optionalUsuario.get().getSenhaUsuario().equals(login.getSenha());
     }
 
-    public void usuarioTemPermissao(String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
+    public boolean usuarioTemPermissao(String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
         String subject = jwtServico.getSujeitoDoToken(authorizationHeader);
-        Optional<Usuario> optUsuario = usuarioRepository.findById(subject);
-        if (!optUsuario.isPresent() && optUsuario.get().getEmail().equals(email)) {
-            throw new PermissaoNegadaExcecao();
+        Optional<Usuario> usuario = usuarioRepository.findById(subject);
+        return usuario.isPresent() && usuario.get().getEmail().equals(email);
+    }
+
+    public boolean usuarioTemPermissaoDeRota(String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
+        Optional<Usuario> usuario = usuarioRepository.findById(email);
+
+        if(usuario.isPresent()){
+            if(usuarioTemPermissao(authorizationHeader, email)){
+                return true;
+            }
+            return false;
         }
+
+        return false;
     }
 
     public boolean usuarioEstaAutenticado(String authHeader) throws PermissaoNegadaExcecao {
@@ -62,5 +74,13 @@ public class UsuarioServico {
             throw new PermissaoNegadaExcecao();
         }
 
+    }
+
+    public List<Usuario> retornarUsuarios() {
+        return usuarioRepository.findAll();
+    }
+
+    public Optional<Usuario> recuperarUsuariId(String usuarioId) {
+        return usuarioRepository.findById(usuarioId);
     }
 }

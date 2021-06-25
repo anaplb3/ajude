@@ -11,6 +11,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.dsc.ajude.servico.JwtServico;
 import com.dsc.ajude.servico.UsuarioServico;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/v1/api/usuarios")
 public class UsuarioControlador {
@@ -28,15 +31,20 @@ public class UsuarioControlador {
 
 	}
 	
-/*	@GetMapping("/")
-	private ResponseEntity<String> verificarSaude() {
-		return new ResponseEntity<>("Server is running!", HttpStatus.OK);
+	@GetMapping("/")
+	private List<Usuario> retornarUsuarios() {
+		return usuarioServico.retornarUsuarios();
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
-		return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
-	}*/
+	@GetMapping("/{usuarioId}")
+	public Optional<Usuario> recuperUsuarioId(@PathVariable String usuarioId){
+		return usuarioServico.recuperarUsuariId(usuarioId);
+	}
+
+	//@PostMapping("/login")
+	//public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
+	//	return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
+	//}
 
 	@PostMapping("")
 	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){

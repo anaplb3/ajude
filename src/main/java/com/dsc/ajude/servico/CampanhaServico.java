@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class CampanhaServico {
+public class    CampanhaServico {
 
     @Autowired
     private CampanhaRepositorio campanhaRepositorio;

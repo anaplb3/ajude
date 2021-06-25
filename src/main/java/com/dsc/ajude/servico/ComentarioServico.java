@@ -3,7 +3,9 @@ package com.dsc.ajude.servico;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.dsc.ajude.dto.AdicionarComentarioDTO;
@@ -14,6 +16,9 @@ import com.dsc.ajude.modelos.Usuario;
 import com.dsc.ajude.repositorios.CampanhaRepositorio;
 import com.dsc.ajude.repositorios.ComentarioRepositorio;
 import com.dsc.ajude.repositorios.UsuarioRepositorio;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.servlet.ServletException;
 
 @Service
 public class ComentarioServico {
@@ -26,6 +31,9 @@ public class ComentarioServico {
 	
 	@Autowired
 	private UsuarioRepositorio usuarioRepositorio;
+
+	@Autowired
+	private UsuarioServico usuarioServico;
 	
 	
 	public AdicionarComentarioDTO adicionarComentario(AdicionarComentarioDTO comentarioAdicionado) throws RecursoNaoEncontradoExcecao {
@@ -52,6 +60,21 @@ public class ComentarioServico {
 		comentarioRepositorio.save(novoComentario);
 		
 		return comentarioAdicionado;
+	}
+
+	public void removerComentario(long idComentario, String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
+		if(!this.usuarioServico.usuarioTemPermissao(authorizationHeader, email)){
+			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
+		}
+
+		Optional<Comentario> comentarioASerDeletado = comentarioRepositorio.findById(idComentario);
+
+		if(comentarioASerDeletado.isEmpty()){
+			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		}
+
+		comentarioRepositorio.deleteById(idComentario);
+
 	}
 
 }
