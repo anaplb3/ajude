@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
+import com.dsc.ajude.modelos.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class ComentarioServico {
 
 	@Autowired
 	private UsuarioServico usuarioServico;
+
+	private final String AUTH = "Authorization";
 	
 	
 	public AdicionarComentarioDTO adicionarComentario(AdicionarComentarioDTO comentarioAdicionado) throws RecursoNaoEncontradoExcecao {
@@ -62,19 +65,23 @@ public class ComentarioServico {
 		return comentarioAdicionado;
 	}
 
-	public void removerComentario(long idComentario, String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
-		if(!this.usuarioServico.usuarioTemPermissao(authorizationHeader, email)){
-			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
-		}
-
+	public Comentario removerComentario(long idComentario, String authorizationHeader, String email) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
 		Optional<Comentario> comentarioASerDeletado = comentarioRepositorio.findById(idComentario);
 
-		if(comentarioASerDeletado.isEmpty()){
-			throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+		if (comentarioASerDeletado.isPresent()) {
+			try {
+				usuarioServico.usuarioTemPermissao(authorizationHeader, email);
+				comentarioRepositorio.deleteById(idComentario);
+				return comentarioASerDeletado.get();
+			} catch (ServletException e) {
+				throw new PermissaoNegadaExcecao();
+			}
+
+		} else {
+			throw new RecursoNaoEncontradoExcecao();
 		}
 
-		comentarioRepositorio.deleteById(idComentario);
-
 	}
+
 
 }

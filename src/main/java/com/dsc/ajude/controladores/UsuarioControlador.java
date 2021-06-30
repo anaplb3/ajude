@@ -24,6 +24,7 @@ public class UsuarioControlador {
 	@Autowired
 	private JwtServico jwtServico;
 
+
 	public UsuarioControlador(UsuarioServico usuarioServico, JwtServico jwtServico){
 		super();
 		this.usuarioServico = usuarioServico;
@@ -41,10 +42,6 @@ public class UsuarioControlador {
 		return usuarioServico.recuperarUsuariId(usuarioId);
 	}
 
-	//@PostMapping("/login")
-	//public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
-	//	return new ResponseEntity<>(jwtService.autenticacao(login), HttpStatus.OK);
-	//}
 
 	@PostMapping("")
 	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){

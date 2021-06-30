@@ -49,18 +49,6 @@ public class UsuarioServico {
         return usuario.isPresent() && usuario.get().getEmail().equals(email);
     }
 
-    public boolean usuarioTemPermissaoDeRota(String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
-        Optional<Usuario> usuario = usuarioRepository.findById(email);
-
-        if(usuario.isPresent()){
-            if(usuarioTemPermissao(authorizationHeader, email)){
-                return true;
-            }
-            return false;
-        }
-
-        return false;
-    }
 
     public boolean usuarioEstaAutenticado(String authHeader) throws PermissaoNegadaExcecao {
         try {

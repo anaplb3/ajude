@@ -18,7 +18,9 @@ public class ComentarioControlador {
 	
 	@Autowired
 	private ComentarioServico comentarioServico;
-	
+
+	private final String AUTH = "Authorization";
+
 	@PostMapping("")
 	public ResponseEntity<AdicionarComentarioDTO> adicionarComentario(@RequestBody AdicionarComentarioDTO adicionarComentario) {
 		try {
@@ -29,10 +31,17 @@ public class ComentarioControlador {
 		} 
 	}
 
-	@DeleteMapping("/deletarcomentario")
-	public void deletarComentario(@PathVariable long idComentario, String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
-		comentarioServico.removerComentario(idComentario, authorizationHeader, email);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletarComentario(@PathVariable long idComentario,@RequestHeader(AUTH) String header, String email){
+		try{
+			return new ResponseEntity<>(comentarioServico.removerComentario(idComentario, header, email), HttpStatus.OK);
+		} catch (RecursoNaoEncontradoExcecao erro) {
+			return new ResponseEntity<>(erro.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (PermissaoNegadaExcecao erroDePermissao){
+			return new ResponseEntity<>(erroDePermissao.getMessage(), HttpStatus.UNAUTHORIZED);
+		}
 	}
+
 
 
 	
