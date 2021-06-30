@@ -3,6 +3,7 @@ package com.dsc.ajude.modelos;
 import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,4 +31,14 @@ public class Campanha {
     @OneToMany
     private List<Comentario> comentarios;
 
+    @OneToMany()
+    private List<Like> likes = new ArrayList<Like>();
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
 }

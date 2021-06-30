@@ -2,6 +2,7 @@ package com.dsc.ajude.servico;
 
 import java.util.Date;
 
+import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class JwtServico {
 				.setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)).compact();
 	}
 
-	public String getSujeitoDoToken(String authorizationHeader) throws ServletException {
+	public String getSujeitoDoToken(String authorizationHeader) throws ServletException{
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
 			throw new ServletException("Token inexistente ou mal formatado!");
 		}
