@@ -45,13 +45,12 @@ public class JwtServico {
 		// Extraindo apenas o token do cabecalho.
 		String token = authorizationHeader.substring(TokenFiltro.TOKEN_INDEX);
 
-		String subject = null;
 		try {
-			subject = Jwts.parser().setSigningKey(TOKEN_KEY).parseClaimsJws(token).getBody().getSubject();
-		} catch (SignatureException e) {
+			return Jwts.parser().setSigningKey(TOKEN_KEY).parseClaimsJws(token).getBody().getSubject();
+		} catch (Exception e) {
 			throw new ServletException("Token invalido ou expirado!");
 		}
-		return subject;
+
 	}
 
 }

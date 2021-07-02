@@ -23,7 +23,7 @@ public class CampanhaControlador {
     private final String AUTH = "Authorization";
 
     @PostMapping("")
-    private ResponseEntity<?> addCampanha(@RequestBody CampanhaDTO campanha, @RequestHeader(AUTH) String header) {
+    private ResponseEntity<?> addCampanha(@RequestBody CampanhaDTO campanha, @RequestHeader(AUTH) String header)  {
         try {
             return new ResponseEntity<>(campanhaServico.addCampanha(campanha, header), HttpStatus.CREATED);
         } catch (PermissaoNegadaExcecao e) {

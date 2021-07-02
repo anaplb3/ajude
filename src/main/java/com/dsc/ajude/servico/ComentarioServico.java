@@ -1,5 +1,6 @@
 package com.dsc.ajude.servico;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import com.dsc.ajude.repositorios.UsuarioRepositorio;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.ServletException;
+import javax.transaction.Transactional;
 
 @Service
 public class ComentarioServico {
@@ -38,41 +40,70 @@ public class ComentarioServico {
 
 	private final String AUTH = "Authorization";
 	
-	
-	public AdicionarComentarioDTO adicionarComentario(AdicionarComentarioDTO comentarioAdicionado) throws RecursoNaoEncontradoExcecao {
+	@Transactional
+	public AdicionarComentarioDTO adicionarComentario(AdicionarComentarioDTO comentarioAdicionado) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
 		Usuario donoComentario = this.usuarioRepositorio.getById(comentarioAdicionado.getEmailDoUsuario());
-		Optional<Campanha> campanha = this.campanhaRepositorio.findById(comentarioAdicionado.getIdCampanha());
-		
-		if(donoComentario == null || !campanha.isPresent()) {
+		if (donoComentario == null) {
+			throw new PermissaoNegadaExcecao();
+		}
+		Campanha campanha = this.campanhaRepositorio.getById(comentarioAdicionado.getIdCampanha());
+		if (campanha == null) {
 			throw new RecursoNaoEncontradoExcecao();
 		}
-		
 		Comentario novoComentario = new Comentario();
 		novoComentario.setConteudoDaMensagem(comentarioAdicionado.getCorpoDaMensagem());
 		novoComentario.setUsuario(donoComentario);
-		
-		if(Objects.isNull(comentarioAdicionado.getIdCampanha())) {
-			Comentario comentarioParaComentario = comentarioRepositorio.findById(comentarioAdicionado.getIdComentario()).get(); 
-			comentarioParaComentario.setRespostasUsuarios(novoComentario);
-			comentarioRepositorio.save(comentarioParaComentario);
-		} else if (Objects.nonNull(comentarioAdicionado.getIdComentario())) {
-			novoComentario.setCampanhaReferencia(campanha.get());
-	
-		}
-		
+		novoComentario.setCampanha(campanha);
+
 		comentarioRepositorio.save(novoComentario);
-		
+
 		return comentarioAdicionado;
 	}
 
-	public Comentario removerComentario(long idComentario, String authorizationHeader, String email) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
+	@Transactional
+	public AdicionarComentarioDTO adicionarRespostaComentario(AdicionarComentarioDTO respostaComentario) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
+		Usuario donoComentario = this.usuarioRepositorio.getById(respostaComentario.getEmailDoUsuario());
+		if (donoComentario == null) {
+			throw new PermissaoNegadaExcecao();
+		}
+
+		if (comentarioRepositorio.findById(respostaComentario.getIdComentario()).isEmpty()) {
+			throw new RecursoNaoEncontradoExcecao();
+		}
+
+		Comentario comentarioExistente = comentarioRepositorio.findById(respostaComentario.getIdComentario()).get();
+
+		Campanha campanhaAssociada = comentarioExistente.getCampanha();
+
+		if(Objects.nonNull(comentarioExistente.getRespostasUsuarios())){
+			// Já existe resposta associada
+			throw new PermissaoNegadaExcecao("Já existe uma resposta para esse comentário");
+		}
+
+		Comentario resposta = new Comentario();
+		resposta.setConteudoDaMensagem(respostaComentario.getCorpoDaMensagem());
+		resposta.setUsuario(donoComentario);
+		resposta.setCampanha(campanhaAssociada);
+
+		comentarioExistente.setRespostasUsuarios(comentarioRepositorio.save(resposta));
+
+		comentarioRepositorio.save(comentarioExistente);
+
+		return respostaComentario;
+	}
+
+	public Comentario removerComentario(long idComentario, String authorizationHeader) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
 		Optional<Comentario> comentarioASerDeletado = comentarioRepositorio.findById(idComentario);
 
 		if (comentarioASerDeletado.isPresent()) {
 			try {
-				usuarioServico.usuarioTemPermissao(authorizationHeader, email);
-				comentarioRepositorio.deleteById(idComentario);
-				return comentarioASerDeletado.get();
+				if (usuarioServico.usuarioTemPermissao(authorizationHeader, comentarioASerDeletado.get().getUsuario().getEmail())) {
+					comentarioRepositorio.deleteById(idComentario);
+					return comentarioASerDeletado.get();
+				} else {
+					throw new PermissaoNegadaExcecao();
+				}
+
 			} catch (ServletException e) {
 				throw new PermissaoNegadaExcecao();
 			}

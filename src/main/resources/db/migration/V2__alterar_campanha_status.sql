@@ -1,0 +1,1 @@
+ALTER TABLE campanhas ALTER COLUMN status TYPE varchar;

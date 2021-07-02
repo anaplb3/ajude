@@ -28,9 +28,9 @@ public class UsuarioServico {
     }
     
 
-    public UsuarioDTO criarUsuario(Usuario usuario){
-        if(!this.usuarioRepository.findById(usuario.getEmail()).isEmpty()){
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+    public UsuarioDTO criarUsuario(Usuario usuario) {
+        if(this.usuarioRepository.findById(usuario.getEmail()).isPresent()){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Email já cadastrado!");
         } else {
             this.usuarioRepository.save(usuario);
             return new UsuarioDTO(usuario.getEmail(), usuario.getPrimeiroNome(), usuario.getUltimoNome());
@@ -43,7 +43,7 @@ public class UsuarioServico {
         return optionalUsuario.isPresent() && optionalUsuario.get().getSenhaUsuario().equals(login.getSenha());
     }
 
-    public boolean usuarioTemPermissao(String authorizationHeader, String email) throws ServletException, PermissaoNegadaExcecao {
+    public boolean usuarioTemPermissao(String authorizationHeader, String email) throws ServletException {
         String subject = jwtServico.getSujeitoDoToken(authorizationHeader);
         Optional<Usuario> usuario = usuarioRepository.findById(subject);
         return usuario.isPresent() && usuario.get().getEmail().equals(email);
