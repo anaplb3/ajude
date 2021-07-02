@@ -8,6 +8,10 @@ public class PermissaoNegadaExcecao extends Exception {
         super("Permissão negada!");
     }
 
+    public PermissaoNegadaExcecao(String message){
+        super(message);
+    }
+
     public PermissaoNegadaExcecao(HttpStatus statuscode){
         super();
     }

@@ -28,15 +28,14 @@ public class    CampanhaServico {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    public CampanhaDTO addCampanha(CampanhaDTO campanha, String authHeader) throws DataInvalidaExcecao, PermissaoNegadaExcecao {
+    public Long addCampanha(CampanhaDTO campanha, String authHeader) throws DataInvalidaExcecao, PermissaoNegadaExcecao {
         try {
             Usuario donoDaCampanha = usuarioRepositorio.getById(campanha.getEmailUsuario());
             usuarioServico.usuarioTemPermissao(authHeader, donoDaCampanha.getEmail());
             if (campanha.getDeadline().isBefore(LocalDateTime.now().toLocalDate())) {
                 throw new DataInvalidaExcecao();
             }
-            campanhaRepositorio.save(campanha.campanhaDTOParaCampanha(donoDaCampanha, Status.ATIVA));
-            return campanha;
+            return campanhaRepositorio.save(campanha.campanhaDTOParaCampanha(donoDaCampanha, Status.ATIVA)).getCampanhaId();
         } catch (ServletException e) {
             throw new PermissaoNegadaExcecao();
         }

@@ -4,9 +4,11 @@ import com.dsc.ajude.modelos.Campanha;
 import com.dsc.ajude.modelos.Status;
 import com.dsc.ajude.modelos.Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+
+@Data
 public class CampanhaDTO {
     private String nome;
     private String descricao;
@@ -31,16 +33,7 @@ public class CampanhaDTO {
         campanha.setMeta(this.meta);
         campanha.setStatus(status);
         campanha.setDono(donoDaCampanha);
-        campanha.setDoacoes(new ArrayList<>());
 
         return campanha;
-    }
-
-    public String getEmailUsuario() {
-        return emailUsuario;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
     }
 }

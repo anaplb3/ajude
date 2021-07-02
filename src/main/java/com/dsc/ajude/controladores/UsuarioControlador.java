@@ -44,13 +44,13 @@ public class UsuarioControlador {
 
 
 	@PostMapping("")
-	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody Usuario usuario){
+	public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario){
 		try {
 			UsuarioDTO userCriado = this.usuarioServico.criarUsuario(usuario);
 			return new ResponseEntity<>(userCriado, HttpStatus.OK);
 
 		} catch (HttpClientErrorException errorUsuario) {
-			return new ResponseEntity<>(errorUsuario.getStatusCode());
+			return new ResponseEntity<>("Email já cadastrado!", errorUsuario.getStatusCode());
 		}
 	}
 	

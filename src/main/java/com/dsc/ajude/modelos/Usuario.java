@@ -1,23 +1,37 @@
 package com.dsc.ajude.modelos;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.sun.istack.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 
+@NoArgsConstructor
 @Entity
+@Data
+@Table(name = "usuarios")
 public class Usuario {
 
     @Id
+	@Column(name = "email")
+	@NotNull
     private String email;
+
+	@NotNull
+    @Column(name = "primeiro_nome")
     private String primeiroNome;
+
+	@NotNull
+    @Column(name = "ultimo_nome")
     private String ultimoNome;
+
+	@NotNull
+    @Column(name = "numero_do_cartao")
     private String numeroDoCartao;
+
+	@NotNull
+    @Column(name = "senha_do_usuario")
     private String senhaUsuario;
-
-    public Usuario(){
-
-    }
     
 	public Usuario(String email, String primeiroNome, String ultimoNome, String numeroDoCartao, String senhaUsuario) {
 		super();
@@ -27,48 +41,5 @@ public class Usuario {
 		this.numeroDoCartao = numeroDoCartao;
 		this.senhaUsuario = senhaUsuario;
 	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPrimeiroNome() {
-		return primeiroNome;
-	}
-
-	public void setPrimeiroNome(String primeiroNome) {
-		this.primeiroNome = primeiroNome;
-	}
-
-	public String getUltimoNome() {
-		return ultimoNome;
-	}
-
-	public void setUltimoNome(String ultimoNome) {
-		this.ultimoNome = ultimoNome;
-	}
-
-	public String getNumeroDoCartao() {
-		return numeroDoCartao;
-	}
-
-	public void setNumeroDoCartao(String numeroDoCartao) {
-		this.numeroDoCartao = numeroDoCartao;
-	}
-
-	public String getSenhaUsuario() {
-		return senhaUsuario;
-	}
-
-	public void setSenhaUsuario(String senhaUsuario) {
-		this.senhaUsuario = senhaUsuario;
-	}
-    
-    
 
 }
