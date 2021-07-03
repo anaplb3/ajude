@@ -1,42 +1,26 @@
 package com.dsc.ajude.modelos;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+import javax.persistence.*;
+
+@NoArgsConstructor
 @Entity
+@Data
+@Table(name = "likes")
 public class Like {
 
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_like")
+    @NonNull
+    private Long id;
 
-    private String usuario;
-
-    private int contador;
-
-    public Like(String usuario){
-        super();
-        this.usuario = usuario;
-    }
-
-    public Like(){
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    @ManyToOne
+    @JoinColumn(name = "email_dono")
+    @NonNull
+    private Usuario usuario;
 
 }

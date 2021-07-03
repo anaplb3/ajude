@@ -49,18 +49,11 @@ public class Campanha {
     @JoinColumn(name = "email_dono")
     private Usuario dono;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "id_comentario")
     private List<Comentario> comentariosDaCampanha;
 
-    @OneToMany()
-    private List<Like> likes = new ArrayList<Like>();
-
-    public List<Like> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(List<Like> likes) {
-        this.likes = likes;
-    }
+    @OneToMany
+    @JoinColumn(name = "id_like")
+    private List<Like> likes = new ArrayList<>();
 }

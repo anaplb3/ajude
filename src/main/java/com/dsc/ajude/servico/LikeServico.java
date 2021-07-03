@@ -1,11 +1,13 @@
 package com.dsc.ajude.servico;
 
+import com.dsc.ajude.dto.LikeDTO;
 import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import com.dsc.ajude.excecoes.RecursoNaoEncontradoExcecao;
 import com.dsc.ajude.modelos.Campanha;
 import com.dsc.ajude.modelos.Like;
 import com.dsc.ajude.repositorios.CampanhaRepositorio;
 import com.dsc.ajude.repositorios.LikeRepositorio;
+import com.dsc.ajude.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,18 +27,16 @@ public class LikeServico {
     private CampanhaRepositorio campanhaRepositorio;
 
     @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
     private UsuarioServico usuarioServico;
 
 
-    public Campanha adicionarLike(long idCampanha, String email, String header) throws PermissaoNegadaExcecao, RecursoNaoEncontradoExcecao, ServletException {
+    public Campanha adicionarLike(LikeDTO likeDTO) throws PermissaoNegadaExcecao, RecursoNaoEncontradoExcecao, ServletException {
+        Optional<Campanha> retornarCampanha = campanhaRepositorio.findById(likeDTO.getIdCampanha());
 
-        if(!this.usuarioServico.usuarioTemPermissao(header, email)){
-            throw new PermissaoNegadaExcecao(HttpStatus.NOT_FOUND);
-        }
-
-        Optional<Campanha> retornarCampanha = campanhaRepositorio.findById(idCampanha);
-
-        if(retornarCampanha.isPresent()){
+        if (retornarCampanha.isEmpty()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         }
 
@@ -44,51 +44,46 @@ public class LikeServico {
 
         List<Like> likes = campanha.getLikes();
 
-        boolean realizouLike = usuarioRealizouLike(likes, email);
-
-        if(realizouLike){
+        if (usuarioJaRealizouLike(likes, likeDTO.getEmailUsuario())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         }
 
-        return adicionandoLikeACampanha(campanha, likes, email);
+        return adicionandoLikeACampanha(campanha, likes, likeDTO.getEmailUsuario());
 
     }
 
-    public Campanha removerLike(long idCampanhaASerRemovida, String email, String header) throws ServletException, PermissaoNegadaExcecao {
-        if(!this.usuarioServico.usuarioTemPermissao(header, email)) {
+    public Campanha removerLike(LikeDTO likeDTO, String header) throws ServletException, PermissaoNegadaExcecao {
+        if(!this.usuarioServico.usuarioTemPermissao(header, likeDTO.getEmailUsuario())) {
             throw new PermissaoNegadaExcecao(HttpStatus.NOT_FOUND);
         }
 
-        Optional<Campanha> retornaCampanha = this.campanhaRepositorio.findById(idCampanhaASerRemovida);
+        Optional<Campanha> retornaCampanha = this.campanhaRepositorio.findById(likeDTO.getIdCampanha());
 
-        if(retornaCampanha.isEmpty()) {
+        if (retornaCampanha.isEmpty()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         }
 
         Campanha campanha = retornaCampanha.get();
-
         List<Like> likes = campanha.getLikes();
 
-        boolean realizouLike = usuarioRealizouLike(likes, email);
-
-        if(!realizouLike){
+        if (!usuarioJaRealizouLike(likes, likeDTO.getEmailUsuario())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         }
 
-        return this.removeLikeDaCampanha(campanha, likes, email);
+        return this.removeLikeDaCampanha(campanha, likes, likeDTO.getEmailUsuario());
     }
 
     private Campanha removeLikeDaCampanha(Campanha campanha, List<Like> likes, String email) {
 
         Like likeASerRemovido = null;
 
-        for(Like like : likes) {
-            if(like.getUsuario().equals(email)) {
+        for (Like like : likes) {
+            if (like.getUsuario().getEmail().equals(email)) {
                 likeASerRemovido = like;
             }
         }
 
-        if(likeASerRemovido != null) {
+        if (likeASerRemovido != null) {
             likes.remove(likeASerRemovido);
         }
         campanha.setLikes(likes);
@@ -97,26 +92,24 @@ public class LikeServico {
 
 
     private Campanha adicionandoLikeACampanha(Campanha campanha, List<Like> likes, String email) {
-        Like like = new Like(email);
+        Like like = new Like();
+        like.setUsuario(usuarioRepositorio.getById(email));
 
-        this.likeRepositorio.save(like);
 
-        likes.add(like);
+        likes.add(this.likeRepositorio.save(like));
 
         campanha.setLikes(likes);
 
         return this.campanhaRepositorio.save(campanha);
     }
 
-    private boolean usuarioRealizouLike(List<Like> likes, String email) {
-        boolean realizouLike = false;
-
-        for(Like like : likes) {
-            if (like.getUsuario().equals(email)) {
-                realizouLike = true;
+    private boolean usuarioJaRealizouLike(List<Like> likes, String email) {
+        for (Like like : likes) {
+            if (like.getUsuario().getEmail().equals(email)) {
+                return true;
             }
         }
-        return realizouLike;
+        return false;
     }
 
 
