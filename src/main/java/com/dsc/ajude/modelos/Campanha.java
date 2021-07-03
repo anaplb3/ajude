@@ -1,5 +1,6 @@
 package com.dsc.ajude.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @Entity
 @Data
@@ -53,7 +55,6 @@ public class Campanha {
     @JoinColumn(name = "id_comentario")
     private List<Comentario> comentariosDaCampanha;
 
-    @OneToMany
-    @JoinColumn(name = "id_like")
+    @OneToMany(mappedBy = "campanha")
     private List<Like> likes = new ArrayList<>();
 }

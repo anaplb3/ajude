@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.ServletException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,8 @@ public class LikeServico {
         return this.removeLikeDaCampanha(campanha, likes, likeDTO.getEmailUsuario());
     }
 
-    private Campanha removeLikeDaCampanha(Campanha campanha, List<Like> likes, String email) {
+    @Transactional
+    public Campanha removeLikeDaCampanha(Campanha campanha, List<Like> likes, String email) {
 
         Like likeASerRemovido = null;
 
@@ -91,9 +93,11 @@ public class LikeServico {
     }
 
 
-    private Campanha adicionandoLikeACampanha(Campanha campanha, List<Like> likes, String email) {
+    @Transactional
+    public Campanha adicionandoLikeACampanha(Campanha campanha, List<Like> likes, String email) {
         Like like = new Like();
         like.setUsuario(usuarioRepositorio.getById(email));
+        like.setCampanha(campanha);
 
 
         likes.add(this.likeRepositorio.save(like));

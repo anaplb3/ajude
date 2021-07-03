@@ -14,12 +14,13 @@ import org.springframework.stereotype.Service;
 import com.dsc.ajude.repositorios.CampanhaRepositorio;
 
 import javax.servlet.ServletException;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class    CampanhaServico {
+public class CampanhaServico {
 
     @Autowired
     private CampanhaRepositorio campanhaRepositorio;
@@ -28,6 +29,7 @@ public class    CampanhaServico {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
+    @Transactional
     public Long addCampanha(CampanhaDTO campanha, String authHeader) throws DataInvalidaExcecao, PermissaoNegadaExcecao {
         try {
             Usuario donoDaCampanha = usuarioRepositorio.getById(campanha.getEmailUsuario());
@@ -42,6 +44,7 @@ public class    CampanhaServico {
 
     }
 
+    @Transactional
     public Campanha encerraCampanha(long id, String authHeader) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
         Optional<Campanha> campanha = campanhaRepositorio.findById(id);
         if (campanha.isPresent()) {
