@@ -8,9 +8,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 import com.dsc.ajude.filtro.TokenFiltro;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableConfigurationProperties
+@EnableSwagger2
 @EntityScan(basePackages = {"com.dsc.ajude.modelos"})
 public class AjudeApplication {
 	
