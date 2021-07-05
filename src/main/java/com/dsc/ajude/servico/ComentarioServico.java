@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.dsc.ajude.dto.AdicionarRespostaComentarioDTO;
 import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import com.dsc.ajude.modelos.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class ComentarioServico {
 		if (donoComentario == null) {
 			throw new PermissaoNegadaExcecao();
 		}
-		Campanha campanha = this.campanhaRepositorio.getById(comentarioAdicionado.getIdCampanha());
+		Campanha campanha = this.campanhaRepositorio.findByCampanhaIdAndStatus(comentarioAdicionado.getIdCampanha(), Status.ATIVA);
 		if (campanha == null) {
 			throw new RecursoNaoEncontradoExcecao();
 		}
@@ -55,13 +56,18 @@ public class ComentarioServico {
 		novoComentario.setUsuario(donoComentario);
 		novoComentario.setCampanha(campanha);
 
-		comentarioRepositorio.save(novoComentario);
+		List<Comentario> comentarios = campanha.getComentariosDaCampanha();
+
+		comentarios.add(comentarioRepositorio.save(novoComentario));
+		campanha.setComentariosDaCampanha(comentarios);
+
+		campanhaRepositorio.save(campanha);
 
 		return comentarioAdicionado;
 	}
 
 	@Transactional
-	public AdicionarComentarioDTO adicionarRespostaComentario(AdicionarComentarioDTO respostaComentario) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
+	public AdicionarRespostaComentarioDTO adicionarRespostaComentario(AdicionarRespostaComentarioDTO respostaComentario) throws RecursoNaoEncontradoExcecao, PermissaoNegadaExcecao {
 		Usuario donoComentario = this.usuarioRepositorio.getById(respostaComentario.getEmailDoUsuario());
 		if (donoComentario == null) {
 			throw new PermissaoNegadaExcecao();

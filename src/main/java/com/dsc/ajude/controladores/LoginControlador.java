@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dsc.ajude.servico.JwtServico;
 
 import javax.servlet.ServletException;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/api/login")
@@ -20,7 +21,8 @@ public class LoginControlador {
     private JwtServico jwtServico;
 
     @PostMapping("")
-    public ResponseEntity<RespostaLoginDTO> realizarLogin(@RequestBody LoginDTO login) throws ServletException {
-        return new ResponseEntity<>(jwtServico.autenticacao(login), HttpStatus.OK);
+    public ResponseEntity<RespostaLoginDTO> realizarLogin(@Valid @RequestBody LoginDTO login) throws ServletException {
+        return ResponseEntity.status(HttpStatus.OK).body(jwtServico.autenticacao(login));
+
     }
 }

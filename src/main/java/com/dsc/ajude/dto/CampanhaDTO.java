@@ -6,18 +6,30 @@ import com.dsc.ajude.modelos.Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 public class CampanhaDTO {
+
+    @NotNull(message = "Nome da campanha é obrigatório.")
     private String nome;
+
+    @NotNull(message = "Descriição da campanha é obrigatório.")
     private String descricao;
+
+    @NotNull(message = "Deadline da campanha é obrigatório.")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate deadline;
-    private double meta;
+
+    @NotNull(message = "Meta da campanha é obrigatório.")
+    private BigDecimal meta;
+
+    @NotNull(message = "Email do Usuário é obrigatório.")
     private String emailUsuario;
 
-    public CampanhaDTO(String nome, String descricao, LocalDate deadline, double meta, String emailUsuario) {
+    public CampanhaDTO(String nome, String descricao, LocalDate deadline, BigDecimal meta, String emailUsuario) {
         this.nome = nome;
         this.descricao = descricao;
         this.deadline = deadline;
@@ -33,7 +45,13 @@ public class CampanhaDTO {
         campanha.setMeta(this.meta);
         campanha.setStatus(status);
         campanha.setDono(donoDaCampanha);
+        campanha.setValorRestanteMeta(this.meta);
+        campanha.setQuantidadeLikes(0);
 
         return campanha;
+    }
+
+    public CampanhaDTO(){
+
     }
 }

@@ -1,9 +1,13 @@
 package com.dsc.ajude.dto;
 
+import com.dsc.ajude.modelos.Usuario;
 import lombok.Builder;
+import lombok.Data;
 
 @Builder(builderClassName = "Builder")
+@Data
 public class UsuarioDTO {
+
     private String email;
     private String primeiroNome;
     private String ultimoNome;
@@ -13,23 +17,11 @@ public class UsuarioDTO {
     	this.primeiroNome = primeiroNome;
     	this.ultimoNome = ultimoNome;	
     }
-    
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPrimeiroNome() {
-		return primeiroNome;
-	}
-	public void setPrimeiroNome(String primeiroNome) {
-		this.primeiroNome = primeiroNome;
-	}
-	public String getUltimoNome() {
-		return ultimoNome;
-	}
-	public void setUltimoNome(String ultimoNome) {
-		this.ultimoNome = ultimoNome;
-	}
+
+    public UsuarioDTO(Usuario usuario) {
+        this.email = usuario.getEmail();
+        this.primeiroNome = usuario.getPrimeiroNome();
+        this.ultimoNome = usuario.getUltimoNome();
+    }
+
 }

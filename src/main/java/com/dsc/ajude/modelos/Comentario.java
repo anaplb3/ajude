@@ -1,5 +1,6 @@
 package com.dsc.ajude.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -30,8 +31,13 @@ public class Comentario {
     @JoinColumn(name = "id_comentario_resposta")
     private Comentario respostasUsuarios;
 
-    @ManyToOne() 
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_campanha")
     private Campanha campanha;
+
+    @JsonIgnore
+    public Campanha getCampanha() {
+        return campanha;
+    }
 
 }

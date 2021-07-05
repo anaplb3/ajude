@@ -1,10 +1,12 @@
 package com.dsc.ajude.servico;
 
 import com.dsc.ajude.dto.LikeDTO;
+import com.dsc.ajude.dto.ResponseCampanhaDTO;
 import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import com.dsc.ajude.excecoes.RecursoNaoEncontradoExcecao;
 import com.dsc.ajude.modelos.Campanha;
 import com.dsc.ajude.modelos.Like;
+import com.dsc.ajude.modelos.Status;
 import com.dsc.ajude.repositorios.CampanhaRepositorio;
 import com.dsc.ajude.repositorios.LikeRepositorio;
 import com.dsc.ajude.repositorios.UsuarioRepositorio;
@@ -34,14 +36,13 @@ public class LikeServico {
     private UsuarioServico usuarioServico;
 
 
-    public Campanha adicionarLike(LikeDTO likeDTO) throws PermissaoNegadaExcecao, RecursoNaoEncontradoExcecao, ServletException {
-        Optional<Campanha> retornarCampanha = campanhaRepositorio.findById(likeDTO.getIdCampanha());
+    public ResponseCampanhaDTO adicionarLike(LikeDTO likeDTO) throws PermissaoNegadaExcecao, RecursoNaoEncontradoExcecao, ServletException {
+        Campanha campanha = campanhaRepositorio.findByCampanhaIdAndStatus(likeDTO.getIdCampanha(), Status.ATIVA);
 
-        if (retornarCampanha.isEmpty()) {
+        if (campanha == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
         }
 
-        Campanha campanha = retornarCampanha.get();
 
         List<Like> likes = campanha.getLikes();
 
@@ -68,7 +69,7 @@ public class LikeServico {
         List<Like> likes = campanha.getLikes();
 
         if (!usuarioJaRealizouLike(likes, likeDTO.getEmailUsuario())) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Usuário já deu like!");
         }
 
         return this.removeLikeDaCampanha(campanha, likes, likeDTO.getEmailUsuario());
@@ -87,14 +88,17 @@ public class LikeServico {
 
         if (likeASerRemovido != null) {
             likes.remove(likeASerRemovido);
+            likeRepositorio.deleteById(likeASerRemovido.getId());
         }
         campanha.setLikes(likes);
+        campanha.setQuantidadeLikes(likes.size());
+
         return this.campanhaRepositorio.save(campanha);
     }
 
 
     @Transactional
-    public Campanha adicionandoLikeACampanha(Campanha campanha, List<Like> likes, String email) {
+    public ResponseCampanhaDTO adicionandoLikeACampanha(Campanha campanha, List<Like> likes, String email) {
         Like like = new Like();
         like.setUsuario(usuarioRepositorio.getById(email));
         like.setCampanha(campanha);
@@ -103,8 +107,10 @@ public class LikeServico {
         likes.add(this.likeRepositorio.save(like));
 
         campanha.setLikes(likes);
+        campanha.setQuantidadeLikes(likes.size());
 
-        return this.campanhaRepositorio.save(campanha);
+        this.campanhaRepositorio.save(campanha);
+        return new ResponseCampanhaDTO(campanha);
     }
 
     private boolean usuarioJaRealizouLike(List<Like> likes, String email) {

@@ -1,5 +1,6 @@
 package com.dsc.ajude.controladores;
 
+import com.dsc.ajude.dto.AdicionarRespostaComentarioDTO;
 import com.dsc.ajude.excecoes.PermissaoNegadaExcecao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +12,10 @@ import com.dsc.ajude.excecoes.RecursoNaoEncontradoExcecao;
 import com.dsc.ajude.servico.ComentarioServico;
 
 import javax.servlet.ServletException;
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/api/comentarios")
+@RequestMapping("/v1/api/auth/comentarios")
 public class ComentarioControlador {
 	
 	@Autowired
@@ -22,35 +24,35 @@ public class ComentarioControlador {
 	private final String AUTH = "Authorization";
 
 	@PostMapping("")
-	public ResponseEntity<?> adicionarComentario(@RequestBody AdicionarComentarioDTO adicionarComentario) {
+	public ResponseEntity<?> adicionarComentario(@Valid @RequestBody AdicionarComentarioDTO adicionarComentario) {
 		try {
-			return new ResponseEntity<>(comentarioServico.adicionarComentario(adicionarComentario), HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.OK).body(comentarioServico.adicionarComentario(adicionarComentario));
 		} catch (RecursoNaoEncontradoExcecao e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}  catch (PermissaoNegadaExcecao e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 		}
 	}
 
 	@PostMapping("/resposta")
-	public ResponseEntity<?> adicionarRespostaComentario(@RequestBody AdicionarComentarioDTO adicionarComentario) {
+	public ResponseEntity<?> adicionarRespostaComentario(@Valid @RequestBody AdicionarRespostaComentarioDTO adicionarResposta) {
 		try {
-			return new ResponseEntity<>(comentarioServico.adicionarRespostaComentario(adicionarComentario), HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.OK).body(comentarioServico.adicionarRespostaComentario(adicionarResposta));
 		} catch (RecursoNaoEncontradoExcecao e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}  catch (PermissaoNegadaExcecao e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 		}
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletarComentario(@PathVariable long id, @RequestHeader(AUTH) String header){
 		try{
-			return new ResponseEntity<>(comentarioServico.removerComentario(id, header), HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.OK).body(comentarioServico.removerComentario(id, header));
 		} catch (RecursoNaoEncontradoExcecao erro) {
-			return new ResponseEntity<>(erro.getMessage(), HttpStatus.NOT_FOUND);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro.getMessage());
 		} catch (PermissaoNegadaExcecao erroDePermissao){
-			return new ResponseEntity<>(erroDePermissao.getMessage(), HttpStatus.UNAUTHORIZED);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erroDePermissao.getMessage());
 		}
 	}
 

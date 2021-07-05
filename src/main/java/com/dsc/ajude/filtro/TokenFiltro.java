@@ -21,6 +21,10 @@ public class TokenFiltro extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
 
+        if (req.getRequestURI().equals("/v1/api/auth/campanhas/campanhasAtivas")) {
+            chain.doFilter(request, response);
+        }
+
         String header = req.getHeader("Authorization");
 
         if(header == null || !header.startsWith("Bearer")){

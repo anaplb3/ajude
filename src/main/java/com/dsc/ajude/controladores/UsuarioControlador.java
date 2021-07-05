@@ -38,8 +38,8 @@ public class UsuarioControlador {
 	}
 
 	@GetMapping("/{usuarioId}")
-	public Optional<Usuario> recuperUsuarioId(@PathVariable String usuarioId){
-		return usuarioServico.recuperarUsuariId(usuarioId);
+	public ResponseEntity<?> recuperUsuarioId(@PathVariable String usuarioId){
+		return ResponseEntity.ok(usuarioServico.recuperarUsuariId(usuarioId));
 	}
 
 
@@ -47,7 +47,7 @@ public class UsuarioControlador {
 	public ResponseEntity<?> criarUsuario(@RequestBody Usuario usuario){
 		try {
 			UsuarioDTO userCriado = this.usuarioServico.criarUsuario(usuario);
-			return new ResponseEntity<>(userCriado, HttpStatus.OK);
+			return ResponseEntity.status(HttpStatus.CREATED).body(userCriado);
 
 		} catch (HttpClientErrorException errorUsuario) {
 			return new ResponseEntity<>("Email já cadastrado!", errorUsuario.getStatusCode());
